@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-service
+  labels:
+    app: news-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: news-service
+  template:
+    metadata:
+      labels:
+        app: news-service
+    spec:
+      containers:
+      - name: news-service
+        image: ghcr.io/opendonationassistant/oda-news-service:22
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JDBC_URL
+          value: "jdbc:postgresql://postgres/postgres?currentSchema=news"
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: MICRONAUT_ENVIRONMENTS
+          value: "standalone"
+      imagePullSecrets:
+      - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-service
+spec:
+  selector:
+    app: news-service
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: news-service
+spec:
+  entryPoints:
+    - web
+  routes:
+    - kind: Rule
+      match: PathPrefix("/news")
+      services:
+        - kind: Service
+          name: news-service
+          nativeLB: true
+          port: 80
