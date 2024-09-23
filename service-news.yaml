@@ -15,16 +15,16 @@ spec:
         app: news-service
     spec:
       containers:
-      - name: news-service
-        image: ghcr.io/opendonationassistant/oda-news-service:22
-        ports:
-        - containerPort: 8080
-        env:
-        - name: JDBC_URL
-          value: "jdbc:postgresql://postgres/postgres?currentSchema=news"
-        - name: RABBITMQ_HOST
-          value: "rabbitmq"
-        - name: MICRONAUT_ENVIRONMENTS
-          value: "standalone"
+        - name: news-service
+          image: ghcr.io/opendonationassistant/oda-news-service:11
+          ports:
+            - containerPort: 8080
+          env:
+            - name: JDBC_URL
+              value: jdbc:postgresql://postgres/postgres?currentSchema=news
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: MICRONAUT_ENVIRONMENTS
+              value: standalone
       imagePullSecrets:
-      - name: regcred
+        - name: regcred
