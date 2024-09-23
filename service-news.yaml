@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: news-service
-          image: ghcr.io/opendonationassistant/oda-news-service:11
+          image: ghcr.io/opendonationassistant/oda-news-service:12
           ports:
             - containerPort: 8080
           env:
